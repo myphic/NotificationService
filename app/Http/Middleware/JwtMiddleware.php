@@ -29,7 +29,7 @@ class JwtMiddleware
                 return response()->json(['status' => 'Токен невалидный.']);
             } else if ($e instanceof TokenExpiredException){
                 return response()->json(['status' => 'Токен просрочен.']);
-            }else{
+            } else {
                 return response()->json(['status' => 'Authorization Token не найден']);
             }
         }
