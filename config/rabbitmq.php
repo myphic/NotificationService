@@ -7,8 +7,8 @@ return [
     'password' => env('RABBITMQ_PASSWORD'),
     'options' => [
         'heartbeat' => 60,
-        'connection_timeout' => 10, // Set connection timeout in seconds
-        'read_write_timeout' => 60 * 2, // Set read/write timeout in seconds
-        'channel_rpc_timeout' => 60 * 2, // Set RPC timeout in seconds
+        'connection_timeout' => 10,
+        'read_write_timeout' => 60 * 2,
+        'channel_rpc_timeout' => 60 * 2,
     ],
 ];
