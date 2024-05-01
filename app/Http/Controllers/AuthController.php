@@ -10,6 +10,10 @@ use Illuminate\Routing\Controllers\Middleware;
 
 class AuthController extends Controller implements HasMiddleware
 {
+    public function __construct(private readonly UserService $service)
+    {
+    }
+
     public static function middleware(): array
     {
         return [
@@ -17,9 +21,9 @@ class AuthController extends Controller implements HasMiddleware
         ];
     }
 
-    public function login(LoginRequest $request, UserService $service)
+    public function login(LoginRequest $request)
     {
-        $token = $service->login($request->toArray());
+        $token = $this->service->login($request->toArray());
 
         if (!$token) {
             return response()->json(['error' => 'Авторизация не пройдена'], 400);
@@ -28,11 +32,11 @@ class AuthController extends Controller implements HasMiddleware
         return $this->createNewToken($token);
     }
 
-    public function register(RegisterRequest $request, UserService $service)
+    public function register(RegisterRequest $request)
     {
         return response()->json([
             'message' => 'Пользователь зарегистрирован.',
-            'user' => $service->register($request->toArray()),
+            'user' => $this->service->register($request->toArray()),
         ], 201);
     }
 
