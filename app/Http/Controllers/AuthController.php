@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -17,32 +17,22 @@ class AuthController extends Controller implements HasMiddleware
         ];
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request, UserService $service)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $token = $service->login($request->toArray());
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token) {
             return response()->json(['error' => 'Авторизация не пройдена'], 400);
         }
 
         return $this->createNewToken($token);
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request, UserService $service)
     {
-        $user = User::create(
-            array_merge(
-                $request->toArray(),
-                ['password' => bcrypt($request->password)]
-            )
-        );
-
         return response()->json([
             'message' => 'Пользователь зарегистрирован.',
-            'user' => $user,
+            'user' => $service->register($request->toArray()),
         ], 201);
     }
 

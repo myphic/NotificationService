@@ -23,16 +23,15 @@ class JwtMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            JWTAuth::parseToken()->authenticate();
+        } catch (TokenInvalidException $e) {
+            return response()->json(['status' => 'Токен невалидный.']);
+        } catch (TokenExpiredException $e) {
+            return response()->json(['status' => 'Токен просрочен.']);
         } catch (Exception $e) {
-            if ($e instanceof TokenInvalidException){
-                return response()->json(['status' => 'Токен невалидный.']);
-            } else if ($e instanceof TokenExpiredException){
-                return response()->json(['status' => 'Токен просрочен.']);
-            } else {
-                return response()->json(['status' => 'Authorization Token не найден']);
-            }
+            return response()->json(['status' => 'Authorization Token не найден']);
         }
+
         return $next($request);
     }
 }
