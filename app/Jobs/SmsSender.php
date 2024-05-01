@@ -14,8 +14,12 @@ class SmsSender implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public function __construct(private readonly string $phone)
+    {
+    }
+
     public function handle(): void
     {
-        Mail::to('user@gmail.com')->send(new WelcomeMail());
+        Mail::to($this->phone)->send(new WelcomeMail());
     }
 }

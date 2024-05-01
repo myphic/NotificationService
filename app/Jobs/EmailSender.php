@@ -14,8 +14,12 @@ class EmailSender implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public function __construct(private readonly string $email)
+    {
+    }
+
     public function handle(): void
     {
-        Mail::to('user@gmail.com')->send(new WelcomeMail());
+        Mail::to($this->email)->send(new WelcomeMail());
     }
 }

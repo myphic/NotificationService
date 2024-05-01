@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -17,11 +18,7 @@ Route::group([
     'middleware' => 'jwt.auth',
     'prefix' => 'notification'
 ], function ($router) {
-    Route::post('/email', function () {
-        App\Jobs\EmailSender::dispatch()->onQueue('email');
-    });
+    Route::post('/email', [NotificationController::class, 'sendEmail']);
 
-    Route::post('/sms', function () {
-        App\Jobs\SmsSender::dispatch()->onQueue('sms');
-    });
+    Route::post('/sms', [NotificationController::class, 'sendSms']);
 });
